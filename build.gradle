@@ -59,24 +59,14 @@ tasks.withType(JavaCompile) {
 
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
-    systemProperty "USERNAME", System.getProperty("USERNAME", "")
-    systemProperty "PASSWORD", System.getProperty("PASSWORD", "")
-    systemProperty "BOOK_ISBN", System.getProperty("BOOK_ISBN", "")
+
+    systemProperty 'USERNAME', System.getProperty('USERNAME', 'localUser')
+    systemProperty 'PASSWORD', System.getProperty('PASSWORD', 'localPass')
+
     testLogging {
         lifecycle {
             events "started", "skipped", "failed", "standard_error", "standard_out"
             exceptionFormat "short"
         }
-    }
-}
-
-task API(type: Test) {
-    useJUnitPlatform {
-        includeTags("API")
-    }
-}
-task UI(type: Test) {
-    useJUnitPlatform {
-        includeTags("UI")
     }
 }
