@@ -3,5 +3,5 @@ package tests;
 public class TestData {
     public static final String USERNAME = System.getProperty("USERNAME", "default_user");
     public static final String PASSWORD = System.getProperty("PASSWORD", "default_pass");
-    public static final String BOOK_ISBN = "9781234567897";
+    public static final String BOOK_ISBN = "9781449325862";
 }
