@@ -27,7 +27,7 @@ public class BookStoreOperationsTests extends TestBase {
     @WithLogin
     @DisplayName("Удаление книги из профиля: проверка через API и UI")
     void deleteBookTest() {
-        LoginResponseModel auth = step("Авторизация через API", AuthAPI::login);
+        LoginResponseModel auth = step("Авторизация пользователя через API", AuthAPI::login);
         String token = auth.getToken();
         String userId = auth.getUserId();
 
@@ -39,7 +39,7 @@ public class BookStoreOperationsTests extends TestBase {
                 BooksAPI.addBook(token, userId, BOOK_ISBN)
         );
 
-        step("Проверка, что книга добавлена через API", () -> {
+        step("Проверка через API, что книга добавлена пользователю", () -> {
             UserBooksResponseModel booksResp = BooksAPI.getUserBooks(token, userId);
             List<UserBooksRequestModel> userBooks = booksResp.getBooks();
             assertThat(userBooks).extracting(UserBooksRequestModel::getIsbn).contains(BOOK_ISBN);
@@ -50,16 +50,16 @@ public class BookStoreOperationsTests extends TestBase {
             $("#userName-value").shouldHave(text(USERNAME));
         });
 
-        step("Удаление книги через API", () ->
+        step("Удаление книги у пользователя через API", () ->
                 BooksAPI.deleteBook(token, userId, BOOK_ISBN)
         );
 
-        step("Проверка через API, что книга удалена", () -> {
+        step("Проверка через API, что книга удалена у пользователя", () -> {
             UserBooksResponseModel booksResp = BooksAPI.getUserBooks(token, userId);
             assertThat(booksResp.getBooks()).noneMatch(b -> b.getIsbn().equals(BOOK_ISBN));
         });
 
-        step("Обновление страницы и проверка UI", () -> {
+        step("Обновление страницы и проверка удаления через UI", () -> {
             Selenide.refresh();
             $(".rt-noData").shouldBe(visible).shouldHave(text("No rows found"));
         });
