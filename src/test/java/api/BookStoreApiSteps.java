@@ -6,7 +6,7 @@ import models.UserBooksResponseModel;
 import static io.restassured.RestAssured.given;
 import static specs.Specs.*;
 
-public class BooksAPI {
+public class BookStoreApiSteps {
     public static void deleteAllBooks(String token, String userId) {
         given(requestSpec)
                 .header("Authorization", "Bearer " + token)
@@ -41,17 +41,5 @@ public class BooksAPI {
                 .delete("/BookStore/v1/Book")
                 .then()
                 .spec(responseSpec(204));
-    }
-
-    public static UserBooksResponseModel getUserBooks(String token, String userId) {
-        Response response = given(requestSpec)
-                .header("Authorization", "Bearer " + token)
-                .when()
-                .get("/Account/v1/User/" + userId)
-                .then()
-                .spec(responseSpec(200))
-                .extract().response();
-
-        return response.as(UserBooksResponseModel.class);
     }
 }

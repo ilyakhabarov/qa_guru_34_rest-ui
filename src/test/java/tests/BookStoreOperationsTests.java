@@ -1,7 +1,7 @@
 package tests;
 
-import api.AuthAPI;
-import api.BooksAPI;
+import api.AccountApiSteps;
+import api.BookStoreApiSteps;
 import com.codeborne.selenide.Selenide;
 import helpers.WithLogin;
 import models.LoginResponseModel;
@@ -27,20 +27,20 @@ public class BookStoreOperationsTests extends TestBase {
     @WithLogin
     @DisplayName("Удаление книги из профиля: проверка через API и UI")
     void deleteBookTest() {
-        LoginResponseModel auth = step("Авторизация пользователя через API", AuthAPI::login);
+        LoginResponseModel auth = step("Авторизация пользователя через API", AccountApiSteps::login);
         String token = auth.getToken();
         String userId = auth.getUserId();
 
         step("Очистка коллекции пользователя", () ->
-                BooksAPI.deleteAllBooks(token, userId)
+                BookStoreApiSteps.deleteAllBooks(token, userId)
         );
 
         step("Добавление книги через API", () ->
-                BooksAPI.addBook(token, userId, BOOK_ISBN)
+                BookStoreApiSteps.addBook(token, userId, BOOK_ISBN)
         );
 
         step("Проверка через API, что книга добавлена пользователю", () -> {
-            UserBooksResponseModel booksResp = BooksAPI.getUserBooks(token, userId);
+            UserBooksResponseModel booksResp = AccountApiSteps.getUserBooks(token, userId);
             List<UserBooksRequestModel> userBooks = booksResp.getBooks();
             assertThat(userBooks).extracting(UserBooksRequestModel::getIsbn).contains(BOOK_ISBN);
         });
@@ -51,11 +51,11 @@ public class BookStoreOperationsTests extends TestBase {
         });
 
         step("Удаление книги у пользователя через API", () ->
-                BooksAPI.deleteBook(token, userId, BOOK_ISBN)
+                BookStoreApiSteps.deleteBook(token, userId, BOOK_ISBN)
         );
 
         step("Проверка через API, что книга удалена у пользователя", () -> {
-            UserBooksResponseModel booksResp = BooksAPI.getUserBooks(token, userId);
+            UserBooksResponseModel booksResp = AccountApiSteps.getUserBooks(token, userId);
             assertThat(booksResp.getBooks()).noneMatch(b -> b.getIsbn().equals(BOOK_ISBN));
         });
 

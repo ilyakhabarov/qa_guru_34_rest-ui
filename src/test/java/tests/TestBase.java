@@ -4,10 +4,12 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import helpers.Attach;
+import helpers.CustomAllureListener;
 import io.qameta.allure.selenide.AllureSelenide;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.util.Map;
@@ -15,6 +17,11 @@ import java.util.Map;
 import static io.restassured.config.SSLConfig.sslConfig;
 
 public class TestBase {
+    @BeforeEach
+    void setUp() {
+        RestAssured.filters(CustomAllureListener.withCustomTemplates());
+    }
+
     @BeforeAll
     static void configuration() {
         Configuration.browserSize = System.getProperty("browserSize", "1280x720");
